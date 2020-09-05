@@ -1,0 +1,56 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.asciidoctor.convert' version '1.5.8' // asciidoctor은 asciidoc 컨텐츠를 다른 포맷으로 변환하는 오픈소스 프로젝트
+    id 'java'
+}
+
+group = 'my.spring'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+def defaultEncoding = 'UTF8'
+
+// packaging the gererated documentation to your project's jar file
+bootJar {
+    // Ensure that the documentation has been generated before the jar is built.
+    dependsOn asciidoctor
+    // Copy the generated documentation into the jar’s static/docs directory.
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    // Configure a property to define the output location for generated snippets.
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // 생성된 .adoc 스닙펫들이 build/generated-snippets를 가리키도록 하고, block macro operation을 사용할 수 있도록 한다
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    // MockMvc 테스트를 사용할 때 사용
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+test {
+    outputs.dir snippetsDir // Configure the test task to add the snippets directory as an output.
+    useJUnitPlatform()
+}
+
+asciidoctor { // Configure the asciidoctor task
+    // Configure the snippets directory as an input.
+    inputs.dir snippetsDir
+    // Make the task depend on the test task so that the tests are run before the documentation is created.
+    dependsOn test
+//    attributes encoding : 'utf-8' // https://gist.github.com/aalmiray/7369b977a68baca32e13
+}
+
