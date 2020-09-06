@@ -1,0 +1,19 @@
+logging:
+  level:
+    .: error
+    org.springframework: error
+    my.spring.sample: error
+
+spring:
+  profiles:
+    active: "prod"
+  datasource:
+    message:
+      pre: Start-Database-Configuration
+      post: End-Database-Configuration
+  cloud:
+    message:
+      pre: Start-Cloud-Configuration
+      post: End-Cloud-Configuration
+  main:
+    allow-bean-definition-overriding: true

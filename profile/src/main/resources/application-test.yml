@@ -1,0 +1,19 @@
+
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mariadb://localhost:3306/test
+    username: test
+  cloud:
+    host: org.siba.test
+    name: Test
+server:
+  name: test
+  port: 8081
+  cluster:
+    - ip: 127.0.0.1
+      path: /test1
+    - ip: 127.0.0.2
+      path: /test2
+    - ip: 127.0.0.3
+      path: /test3

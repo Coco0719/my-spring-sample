@@ -1,0 +1,19 @@
+
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:mariadb://localhost:3306/prod
+    username: prod
+  cloud:
+    host: org.siba.prod
+    name: Prod
+server:
+  name: prod
+  port: 8082
+  cluster:
+    - ip: 127.0.0.1
+      path: /prod1
+    - ip: 127.0.0.2
+      path: /prod2
+    - ip: 127.0.0.3
+      path: /prod
